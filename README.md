@@ -5,11 +5,12 @@ An end-to-end Data Analytics project that automatically collects, processes, sto
 The project demonstrates a complete ETL (Extract, Transform, Load) pipeline built with Python, SQLite, SQL, and Tableau, following industry best practices for data analytics projects.
 
 ---
+## 📊 Live Dashboard
+
+View the interactive dashboard on Tableau Public:
+**https://public.tableau.com/app/profile/maria.murziankova/vizzes**
 
 # Dashboard Preview
-
-> *(Add a screenshot of your Tableau dashboard here once it is finished.)*
-
 ![Dashboard](assets/figures/dashboard.png)
 
 ---
@@ -50,15 +51,7 @@ Assets included:
              Data Extraction (Python)
                       │
                       ▼
-             Data Cleaning & Validation
-                      │
-                      ▼
-          Feature Engineering (Pandas)
-
-        • Daily Returns
-        • Normalized Prices
-        • Asset Classification
-        • Asset Names
+             Data Cleaning & Validation (pandas)
                       │
                       ▼
              SQLite Database Storage
@@ -67,7 +60,7 @@ Assets included:
                 SQL Analysis
                       │
                       ▼
-            Tableau Interactive Dashboard
+            Tableau Dashboard
 ```
 
 ---
@@ -173,34 +166,6 @@ The interactive dashboard provides:
 - Asset class distribution
 - Interactive filters
 - KPI cards
-
----
-
-# Installation
-
-Clone the repository
-
-```bash
-git clone https://github.com/yourusername/Global-Financial-Markets-Dashboard.git
-```
-
-Move into the project
-
-```bash
-cd Global-Financial-Markets-Dashboard
-```
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the ETL pipeline
-
-```bash
-python main.py
-```
 
 ---
 
