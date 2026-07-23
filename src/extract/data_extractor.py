@@ -3,7 +3,16 @@ import pandas as pd
 
 
 class DataExtractor:
-    def __init__(self):
+    """
+    Downloads historical financial market data from Yahoo Finance.
+    The class retrieves daily market data for a predefined list of
+    financial assets, including stocks, stock indices,
+    cryptocurrencies, commodities, and exchange rates.
+    """
+    def __init__(self)-> None:
+        """
+        Initialize the list of financial assets to download.
+        """
         self.tickers = [
             "AAPL",
             "MSFT",
@@ -17,7 +26,15 @@ class DataExtractor:
             "EURUSD=X"
         ]
 
-    def download_data(self):
+    def download_data(self)-> pd.DataFrame:
+        """
+        Download one year of historical market data for all configured assets.
+        Returns
+        -------
+        pandas.DataFrame
+            Combined historical price data for all assets with an
+            additional 'Ticker' column identifying each asset.
+        """
         all_data = []
 
         for ticker in self.tickers:
