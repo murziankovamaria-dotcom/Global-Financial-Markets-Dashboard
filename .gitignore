@@ -19,3 +19,35 @@ data/database/*.db
 
 # Environment variables
 .env
+
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Logs
+logs/*.log
+
+# SQLite database
+data/database/*.db
+
+# Environment variables
+.env
+
+# R
+.Rhistory
+.RData
+
+# VS Code
+.vscode/
+
+# HTML exports
+*.html
