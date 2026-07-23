@@ -16,6 +16,7 @@ import sqlite3
 from src.extract.data_extractor import DataExtractor
 from src.transform.data_transformer import DataTransformer
 from src.load.data_loader import DataLoader
+from src.utils.logger import logger
 
 
 def main():
@@ -23,7 +24,7 @@ def main():
 
     print("=" * 50)
     print("Global Financial Markets Dashboard")
-    print("Starting ETL pipeline...")
+    logger.info("Starting ETL pipeline...")
     print("=" * 50)
 
     # --------------------------------------------------
@@ -38,60 +39,60 @@ def main():
     # Extract
     # --------------------------------------------------
 
-    print("\nDownloading market data...")
+    logger.info("Downloading market data...")
 
     data = extractor.download_data()
 
-    print("✓ Market data downloaded.")
+    logger.info("✓ Market data downloaded.")
 
     # --------------------------------------------------
     # Transform
     # --------------------------------------------------
 
-    print("\nCleaning data...")
+    logger.info("Cleaning data...")
 
     data = transformer.clean_data(data)
 
-    print("✓ Data cleaned.")
+    logger.info("✓ Data cleaned.")
 
-    print("\nValidating data...")
+    logger.info("Validating data...")
 
     transformer.validate_data(data)
 
-    print("✓ Data validated.")
+    logger.info("✓ Data validated.")
 
-    print("\nCalculating daily returns...")
+    logger.info("Calculating daily returns...")
 
     data = transformer.calculate_daily_returns(data)
 
-    print("✓ Daily returns calculated.")
+    logger.info("✓ Daily returns calculated.")
 
-    print("\nNormalizing prices...")
+    logger.info("Normalizing prices...")
 
     data = transformer.normalize_prices(
         data,
         extractor.tickers
     )
 
-    print("✓ Prices normalized.")
+    logger.info("✓ Prices normalized.")
 
-    print("\nAdding asset classes...")
+    logger.info("Adding asset classes...")
 
     data = transformer.add_asset_class(data)
 
-    print("✓ Asset classes added.")
+    logger.info("✓ Asset classes added.")
 
-    print("\nAdding asset names...")
+    logger.info("Adding asset names...")
 
     data = transformer.add_asset_name(data)
 
-    print("✓ Asset names added.")
+    logger.info("✓ Asset names added.")
 
     # --------------------------------------------------
     # Load
     # --------------------------------------------------
 
-    print("\nSaving processed data...")
+    logger.info("Saving processed data...")
 
     loader.save_to_csv(
     data,
@@ -100,7 +101,7 @@ def main():
 
     connection = sqlite3.connect("data/database/market_data.db")
 
-    print("✓ Data successfully saved.")
+    logger.info("✓ Data successfully saved.")
 
     print("\n" + "=" * 50)
     print("ETL pipeline completed successfully!")

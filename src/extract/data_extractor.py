@@ -1,7 +1,6 @@
 import yfinance as yf
 import pandas as pd
 
-
 class DataExtractor:
     """
     Downloads historical financial market data from Yahoo Finance.
@@ -25,6 +24,8 @@ class DataExtractor:
             "CL=F",
             "EURUSD=X"
         ]
+
+
 
     def download_data(self)-> pd.DataFrame:
         """
