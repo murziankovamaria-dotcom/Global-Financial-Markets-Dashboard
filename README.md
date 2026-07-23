@@ -8,7 +8,7 @@ The project demonstrates a complete ETL (Extract, Transform, Load) pipeline buil
 ## 📊 Live Dashboard
 
 **View the interactive dashboard on Tableau Public:**
-s**[Open the Interactive Tableau Dashboard](https://public.tableau.com/views/GlobalFinancialMarketsDashboard/Dashboard)**
+[Open the Interactive Tableau Dashboard](https://public.tableau.com/views/GlobalFinancialMarketsDashboard/Dashboard)
 
 # Dashboard Preview
 ![Dashboard](assets/figures/dashboard.png)
