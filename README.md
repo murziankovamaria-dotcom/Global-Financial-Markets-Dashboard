@@ -203,9 +203,6 @@ The project successfully demonstrates:
 
 Economics & Finance Student | Data Analytics | Business Intelligence
 
-
-## Connect with Me
-
 [![GitHub](https://img.shields.io/badge/GitHub-murziankovamaria--dotcom-181717?style=for-the-badge&logo=github)](https://github.com/murziankovamaria-dotcom)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Maria%20Murziankova-0077B5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/maria-murziankova-004522327/)
