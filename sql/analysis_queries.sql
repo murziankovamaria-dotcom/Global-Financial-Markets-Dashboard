@@ -73,16 +73,20 @@ SELECT
     Date,
     [Daily Return] AS [Best Daily Return]
 FROM market_data
+WHERE [Daily Return] IS NOT NULL
 ORDER BY [Daily Return] DESC
 LIMIT 10;
 
 
 -- 9. Top 10 worst trading days
+-- NULLs (the first day of each ticker has no previous close) sort FIRST in
+-- SQLite's ASC order, so they must be filtered out explicitly.
 SELECT
     Ticker,
     Date,
     [Daily Return] AS [Worst Daily Return]
 FROM market_data
+WHERE [Daily Return] IS NOT NULL
 ORDER BY [Daily Return] ASC
 LIMIT 10;
 
