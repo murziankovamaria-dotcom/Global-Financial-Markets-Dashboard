@@ -24,3 +24,7 @@ typing_extensions==4.16.0
 urllib3==2.7.0
 websockets==16.1.1
 yfinance==1.5.1
+# Used by notebooks/02_SQL_Analysis.ipynb and the notebooks in VS Code
+# (missing from the original pip freeze)
+matplotlib>=3.9
+ipykernel>=6.29

@@ -1,5 +1,9 @@
-import yfinance as yf
 import pandas as pd
+import yfinance as yf
+
+from src.config import ASSETS, PERIOD
+from src.utils.logger import logger
+
 
 class DataExtractor:
     """
@@ -8,43 +12,49 @@ class DataExtractor:
     financial assets, including stocks, stock indices,
     cryptocurrencies, commodities, and exchange rates.
     """
-    def __init__(self)-> None:
+
+    def __init__(self) -> None:
         """
         Initialize the list of financial assets to download.
         """
-        self.tickers = [
-            "AAPL",
-            "MSFT",
-            "NVDA",
-            "^GSPC",
-            "^IXIC",
-            "BTC-USD",
-            "ETH-USD",
-            "GC=F",
-            "CL=F",
-            "EURUSD=X"
-        ]
+        self.tickers = list(ASSETS)
 
-
-
-    def download_data(self)-> pd.DataFrame:
+    def download_data(self) -> pd.DataFrame:
         """
-        Download one year of historical market data for all configured assets.
+        Download the configured period of historical market data
+        (see ``PERIOD`` in ``src/config.py``) for all assets.
+
         Returns
         -------
         pandas.DataFrame
-            Combined historical price data for all assets with an
-            additional 'Ticker' column identifying each asset.
+            Combined historical price data for all assets, indexed by
+            ``Date``, with an additional 'Ticker' column identifying each asset.
+
+        Raises
+        ------
+        ValueError
+            If Yahoo Finance returns no data for one of the tickers.
         """
         all_data = []
 
         for ticker in self.tickers:
             data = yf.download(
                 ticker,
-                period="1y",
-                auto_adjust=False
+                period=PERIOD,
+                auto_adjust=False,
+                progress=False
             )
-            data.columns = data.columns.get_level_values(0)
+            if data.empty:
+                raise ValueError(f"No data returned by Yahoo Finance for {ticker}.")
+
+            # yfinance returns (Price, Ticker) column levels; keep only Price.
+            if isinstance(data.columns, pd.MultiIndex):
+                data.columns = data.columns.get_level_values(0)
+            data.columns.name = None
+            data.index.name = "Date"
+
             data["Ticker"] = ticker
             all_data.append(data)
+            logger.info("Downloaded %s (%d rows)", ticker, len(data))
+
         return pd.concat(all_data)

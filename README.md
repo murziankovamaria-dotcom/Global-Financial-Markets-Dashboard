@@ -85,10 +85,13 @@ Assets included:
 ```text
 Global-Financial-Markets-Dashboard/
 │
+├── assets/
+│   └── figures/              # charts exported by notebook 02 + dashboard preview
+│
 ├── data/
-│   ├── raw/
-│   ├── processed/
-│   └── database/
+│   ├── raw/                  # raw Yahoo Finance download (market_data_raw.csv)
+│   ├── processed/            # market_data.csv, volatility.csv (Tableau data sources)
+│   └── database/             # market_data.db (generated, not tracked by Git)
 │
 ├── notebooks/
 │   ├── 01_ETL_Pipeline.ipynb
@@ -98,19 +101,91 @@ Global-Financial-Markets-Dashboard/
 │   └── analysis_queries.sql
 │
 ├── src/
+│   ├── config.py             # asset universe, download period, file paths
 │   ├── extract/
 │   │   └── data_extractor.py
 │   ├── transform/
 │   │   └── data_transformer.py
-│   └── load/
-│       └── data_loader.py
+│   ├── load/
+│   │   └── data_loader.py
+│   └── utils/
+│       └── logger.py
 │
 ├── tableau/
+│   └── Global Financial Markets.twb
 │
+├── LICENSE
 ├── README.md
 ├── requirements.txt
 └── main.py
 ```
+
+---
+
+# Getting Started
+
+```bash
+# 1. Clone the repository and enter it
+git clone https://github.com/murziankovamaria-dotcom/Global-Financial-Markets-Dashboard.git
+cd Global-Financial-Markets-Dashboard
+
+# 2. Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+# 3. Install the dependencies
+pip install -r requirements.txt
+
+# 4. Run the ETL pipeline (needs an internet connection)
+python main.py
+```
+
+`main.py` downloads the data, saves the raw and processed CSV files, recomputes `volatility.csv` and creates the SQLite database `data/database/market_data.db`. Afterwards, open `notebooks/02_SQL_Analysis.ipynb` to run the SQL analysis. `notebooks/01_ETL_Pipeline.ipynb` runs the same pipeline step by step.
+
+The Tableau workbook in `tableau/` reads `data/processed/market_data.csv` and `data/processed/volatility.csv`. After refreshing the data, open the workbook and re-link both files if Tableau asks for them.
+
+> **Note:** the pipeline downloads the *last 1 year* up to the day it is run (`PERIOD` in `src/config.py`), so each run covers a slightly different window. The CSV files committed to this repository cover 23 July 2025 – 23 July 2026.
+
+---
+
+# Data Dictionary
+
+Columns of `data/processed/market_data.csv` (one row per asset and trading day):
+
+| Column | Description |
+|--------|-------------|
+| Date | Trading day |
+| Open / High / Low / Close | Daily prices as reported by Yahoo Finance (not adjusted for dividends or splits) |
+| Volume | Traded volume as reported by Yahoo Finance. The unit differs by asset class (shares for stocks, USD for cryptocurrencies, none for EUR/USD) |
+| Ticker | Yahoo Finance symbol |
+| Daily Change | Intraday move, `Close - Open`, in price units |
+| Daily Return | Close-to-close return versus the previous trading day of the same asset, as a fraction (0.01 = 1%). Empty on the first day of each asset |
+| Normalized Price | Close rebased to 100 on the first day |
+| Asset Class | Stock, Index, Cryptocurrency, Commodity or Forex |
+| Asset Name | Human-readable asset name |
+
+`data/processed/volatility.csv` contains the standard deviation of the daily returns per asset (daily, not annualised).
+
+---
+
+# Limitations
+
+- **Volume is not comparable across asset classes** (see the data dictionary), so volume rankings only make sense within a class.
+- Cryptocurrencies trade every day, while stocks, indices and commodities follow exchange calendars, so assets have a different number of observations.
+- Returns are based on unadjusted closing prices.
+- Yahoo Finance occasionally reports a Close slightly outside the daily High–Low range (mostly EUR/USD). The pipeline logs a warning for these rows and keeps them.
+- All assets are quoted in US dollars (indices in points, EUR/USD as dollars per euro), so returns are USD returns and are not converted to other currencies.
+
+---
+
+# Tests
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+The tests run offline (they never call Yahoo Finance) and cover the transformations, the loader, every query in `sql/analysis_queries.sql`, and the consistency of the CSV files that feed Tableau. They also run automatically on every push through GitHub Actions (`.github/workflows/ci.yml`).
 
 ---
 
@@ -133,12 +208,15 @@ The transformation stage performs:
 - Price normalization
 - Asset classification
 - Asset name mapping
+- Volatility calculation
 
 ## Load
 
-Processed data is exported to:
+The pipeline writes:
 
-- CSV
+- Raw download (CSV)
+- Processed data (CSV)
+- Volatility per asset (CSV)
 - SQLite Database
 
 ---
@@ -185,8 +263,7 @@ The project successfully demonstrates:
 # Future Improvements
 
 - Automated daily data refresh
-- Logging system
-- Configuration file (.env)
+- Environment-based configuration (.env)
 - Unit testing
 - Docker containerization
 - Cloud database support
@@ -202,9 +279,6 @@ The project successfully demonstrates:
 **Maria Murziankova**
 
 Economics & Finance Student | Data Analytics | Business Intelligence
-
-
-## Connect with Me
 
 [![GitHub](https://img.shields.io/badge/GitHub-murziankovamaria--dotcom-181717?style=for-the-badge&logo=github)](https://github.com/murziankovamaria-dotcom)
 
